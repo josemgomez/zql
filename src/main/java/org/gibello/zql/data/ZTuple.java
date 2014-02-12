@@ -102,7 +102,7 @@ public class ZTuple {
 	 * @param value
 	 *            the Object representing the attribute value
 	 */
-	public void setAtt(String name, Object value) {
+	public final void setAtt(String name, Object value) {
 		if (name != null) {
 			boolean exist = searchTable.containsKey(name);
 
@@ -113,7 +113,7 @@ public class ZTuple {
 				int i = attributes.size();
 				attributes.add(name);
 				values.add(value);
-				searchTable.put(name, new Integer(i));
+				searchTable.put(name, Integer.valueOf(i));
 			}
 		}
 	}
@@ -223,7 +223,7 @@ public class ZTuple {
 
 		String ret = "[";
 
-		if (attributes.size() > 0) {
+		if (!attributes.isEmpty()) {
 			att = attributes.get(0);
 			if (att == null) {
 				attS = "(null)";

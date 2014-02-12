@@ -32,18 +32,19 @@ public class ZUtils {
 		if (fcts == null) {
 			fcts = new HashMap<String, Integer>();
 		}
-		if (nparm < 0) {
-			nparm = 1;
-		}
-		fcts.put(fct.toUpperCase(), new Integer(nparm));
+
+		fcts.put(fct.toUpperCase(), nparm < 0 ? 1 : Integer.valueOf(nparm));
 	}
 
 	public static int isCustomFunction(String fct) {
-		Integer nparm;
-		if (fct == null || fct.length() < 1 || fcts == null || (nparm = fcts.get(fct.toUpperCase())) == null) {
-			return -1;
+		final int ret;
+
+		if (fct == null || fct.isEmpty() || fcts == null || !fcts.containsKey(fct.toUpperCase())) {
+			ret =-1;
+		} else {
+			ret = fcts.get(fct.toUpperCase());
 		}
-		return nparm.intValue();
+		return ret;
 	}
 
 	public static boolean isAggregate(String op) {

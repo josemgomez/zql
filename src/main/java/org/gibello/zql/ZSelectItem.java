@@ -73,7 +73,7 @@ public class ZSelectItem extends ZAliasedName {
 	 *         expression, not c)
 	 */
 	public boolean isExpression() {
-		return (expression instanceof ZExpression);
+		return expression instanceof ZExpression;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ZSelectItem extends ZAliasedName {
 	 * @param a
 	 *            The name of the aggregate function (a String, like SUM, AVG, MAX, MIN)
 	 */
-	public void setAggregate(String a) {
+	public final void setAggregate(String a) {
 		aggregate = a;
 	}
 

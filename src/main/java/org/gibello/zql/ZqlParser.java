@@ -91,7 +91,7 @@ public class ZqlParser {
 	/**
 	 * Initialize (or re-initialize) the input stream for the parser.
 	 */
-	public void initParser(InputStream in) {
+	public final void initParser(InputStream in) {
 		if (parser == null) {
 			parser = new ZqlJJParser(in);
 		} else {

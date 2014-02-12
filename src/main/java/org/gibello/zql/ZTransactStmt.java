@@ -36,7 +36,7 @@ public class ZTransactStmt implements ZStatement {
 	}
 
 	public void setComment(String c) {
-		comment = new String(c);
+		comment = c;
 	}
 
 	public String getComment() {

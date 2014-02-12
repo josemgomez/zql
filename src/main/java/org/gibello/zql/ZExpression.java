@@ -27,8 +27,8 @@ import java.util.List;
 public class ZExpression implements ZExp {
 	private static final long serialVersionUID = 3034365237806330384L;
 
-	private String op = null;
-	private List<ZExp> operands = null;
+	private final String op;
+	private final List<ZExp> operands = new ArrayList<ZExp>();
 
 	/**
 	 * Create an SQL Expression given the operator
@@ -37,7 +37,7 @@ public class ZExpression implements ZExp {
 	 *            The operator
 	 */
 	public ZExpression(String op) {
-		op = new String(op);
+		this.op = op;
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ZExpression implements ZExp {
 	 *            The 1st operand
 	 */
 	public ZExpression(String op, ZExp o1) {
-		op = new String(op);
+		this.op = op;
 		addOperand(o1);
 	}
 
@@ -64,7 +64,7 @@ public class ZExpression implements ZExp {
 	 *            The 2nd operand
 	 */
 	public ZExpression(String op, ZExp o1, ZExp o2) {
-		op = new String(op);
+		this.op = op;
 		addOperand(o1);
 		addOperand(o2);
 	}
@@ -85,7 +85,8 @@ public class ZExpression implements ZExp {
 	 *            A vector that contains all operands (ZExp objects).
 	 */
 	public void setOperands(List<ZExp> v) {
-		operands = v;
+		operands.clear();
+		operands.addAll(v);
 	}
 
 	/**
@@ -103,10 +104,7 @@ public class ZExpression implements ZExp {
 	 * @param o
 	 *            The operand to add.
 	 */
-	public void addOperand(ZExp o) {
-		if (operands == null) {
-			operands = new ArrayList<ZExp>();
-		}
+	public final void addOperand(ZExp o) {
 		operands.add(o);
 	}
 
@@ -212,30 +210,30 @@ public class ZExpression implements ZExp {
 			}
 		default:
 
-			boolean in_op = "IN".equals(op) || "NOT IN".equals(op);
+			boolean inOp = "IN".equals(op) || "NOT IN".equals(op);
 
 			int nb = nbOperands();
 			for (int i = 0; i < nb; i++) {
 
-				if (in_op && i == 1) {
+				if (inOp && i == 1) {
 					ret += " " + op + " (";
 				}
 
 				operand = getOperand(i);
-				if (operand instanceof ZQuery && !in_op) {
+				if (operand instanceof ZQuery && !inOp) {
 					ret += "(" + operand.toString() + ")";
 				} else {
 					ret += operand.toString();
 				}
 				if (i < nb - 1) {
-					if (",".equals(op) || (in_op && i > 0)) {
+					if (",".equals(op) || (inOp && i > 0)) {
 						ret += ", ";
-					} else if (!in_op) {
+					} else if (!inOp) {
 						ret += " " + op + " ";
 					}
 				}
 			}
-			if (in_op) {
+			if (inOp) {
 				ret += ")";
 			}
 			break;

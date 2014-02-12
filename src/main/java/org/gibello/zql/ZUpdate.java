@@ -39,7 +39,7 @@ public class ZUpdate implements ZStatement {
 	 * Create an UPDATE statement on a given table.
 	 */
 	public ZUpdate(String tab) {
-		table = new String(tab);
+		table = tab;
 	}
 
 	public String getTable() {
@@ -117,14 +117,11 @@ public class ZUpdate implements ZStatement {
 	 *            The column index (starting from 1).
 	 * @return a ZExp, like a ZConstant representing a value, or a more complex SQL expression.
 	 */
-	public ZExp getColumnUpdate(int index) {
-		if (--index < 0) {
+	public ZExp getColumnUpdate(final int index) {
+		if (index < 1 || columns == null || index > columns.size()) {
 			return null;
 		}
-		if (columns == null || index >= columns.size()) {
-			return null;
-		}
-		String col = columns.get(index);
+		final String col = columns.get(index - 1);
 		return set.get(col);
 	}
 
@@ -138,13 +135,10 @@ public class ZUpdate implements ZStatement {
 	 * @return The corresponding column name.
 	 */
 	public String getColumnUpdateName(int index) {
-		if (--index < 0) {
+		if (index < 1 || columns == null || index > columns.size()) {
 			return null;
 		}
-		if (columns == null || index >= columns.size()) {
-			return null;
-		}
-		return columns.get(index);
+		return columns.get(index - 1);
 	}
 
 	/**

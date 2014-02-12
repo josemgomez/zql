@@ -124,7 +124,7 @@ public class ZEval {
 			}
 			ZExp x = pred.getOperand(0);
 			if (x instanceof ZConstant) {
-				return (((ZConstant) x).getType() == ZConstant.Type.NULL);
+				return ((ZConstant) x).getType() == ZConstant.Type.NULL;
 			} else {
 				throw new SQLException("ZEval.eval(): can't eval IS (NOT) NULL");
 			}
@@ -155,7 +155,7 @@ public class ZEval {
 		o2 = evalExpValue(tuple, operands.get(1));
 
 		if (o1 instanceof String || o2 instanceof String) {
-			return (o1.equals(o2) ? 0 : -1);
+			return o1.equals(o2) ? 0 : -1;
 		}
 
 		if (o1 instanceof Number && o2 instanceof Number) {

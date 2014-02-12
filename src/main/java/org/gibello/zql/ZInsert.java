@@ -17,6 +17,7 @@
 
 package org.gibello.zql;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,7 +85,7 @@ public class ZInsert implements ZStatement {
 	 */
 	public List<ZExp> getValues() {
 		if (!(valueSpec instanceof ZExpression)) {
-			return null;
+			return Collections.<ZExp>emptyList();
 		}
 		return ((ZExpression) valueSpec).getOperands();
 	}
@@ -104,7 +105,7 @@ public class ZInsert implements ZStatement {
 
 	public String toString() {
 		String ret = "insert into " + table;
-		if (columns != null && columns.size() > 0) {
+		if (columns != null && !columns.isEmpty()) {
 
 			ret += "(" + columns.get(0);
 			for (int i = 1; i < columns.size(); i++) {
@@ -115,7 +116,7 @@ public class ZInsert implements ZStatement {
 
 		String vlist = valueSpec.toString();
 		ret += " ";
-		if (getValues() != null) {
+		if (!getValues().isEmpty()) {
 			ret += "values ";
 		}
 		if (vlist.startsWith("(")) {

@@ -35,7 +35,7 @@ public class ZDelete implements ZStatement {
 	 *            the table name
 	 */
 	public ZDelete(String tab) {
-		table = new String(tab);
+		this.table = tab;
 	}
 
 	/**

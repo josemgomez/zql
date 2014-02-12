@@ -38,7 +38,7 @@ public class ZAliasedName implements java.io.Serializable {
 
 	public static enum Form {
 		TABLE, COLUMN
-	};
+	}
 
 	Form form = Form.COLUMN;
 
@@ -87,19 +87,20 @@ public class ZAliasedName implements java.io.Serializable {
 		column = postProcess(column);
 	}
 
-	private String postProcess(String val) {
+	private String postProcess(final String val) {
 		if (val == null) {
 			return null;
 		}
 
-		if (val.indexOf("(") >= 0) {
-			val = val.substring(val.lastIndexOf("(") + 1);
+		String ret = val;
+		if (ret.indexOf('(') >= 0) {
+			ret = ret.substring(ret.lastIndexOf('(') + 1);
 		}
 
-		if (val.indexOf(")") >= 0) {
-			val = val.substring(0, val.indexOf(")"));
+		if (ret.indexOf(')') >= 0) {
+			ret = val.substring(0, ret.indexOf(')'));
 		}
-		return val.trim();
+		return ret.trim();
 	}
 
 	public String toString() {

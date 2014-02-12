@@ -29,7 +29,7 @@ public class ZConstant implements ZExp {
 	 */
 	public static enum Type {
 		UNKNOWN, COLUMNNAME, NULL, NUMBER, STRING
-	};
+	}
 
 	final Type type;
 	final String val;
