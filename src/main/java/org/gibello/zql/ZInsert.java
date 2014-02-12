@@ -25,15 +25,15 @@ import java.util.List;
 public class ZInsert implements ZStatement {
 	private static final long serialVersionUID = 2534470365222319553L;
 
-	final String table_;
-	List<String> columns_ = null;
-	ZExp valueSpec_ = null;
+	private final String table;
+	private List<String> columns = null;
+	private ZExp valueSpec = null;
 
 	/**
 	 * Create an INSERT statement on a given table
 	 */
 	public ZInsert(String tab) {
-		table_ = new String(tab);
+		table = tab;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class ZInsert implements ZStatement {
 	 * @return A String equal to the table name
 	 */
 	public String getTable() {
-		return table_;
+		return table;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class ZInsert implements ZStatement {
 	 * @return A Vector of Strings equal to the column names
 	 */
 	public List<String> getColumns() {
-		return columns_;
+		return columns;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class ZInsert implements ZStatement {
 	 *            A vector of column names (Strings)
 	 */
 	public void addColumns(List<String> c) {
-		columns_ = c;
+		columns = c;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ZInsert implements ZStatement {
 	 *            SELECT statement, e should be a ZQuery object.
 	 */
 	public void addValueSpec(ZExp e) {
-		valueSpec_ = e;
+		valueSpec = e;
 	}
 
 	/**
@@ -83,10 +83,10 @@ public class ZInsert implements ZStatement {
 	 *         getQuery() method).
 	 */
 	public List<ZExp> getValues() {
-		if (!(valueSpec_ instanceof ZExpression)) {
+		if (!(valueSpec instanceof ZExpression)) {
 			return null;
 		}
-		return ((ZExpression) valueSpec_).getOperands();
+		return ((ZExpression) valueSpec).getOperands();
 	}
 
 	/**
@@ -96,33 +96,33 @@ public class ZInsert implements ZStatement {
 	 *         method to get the VALUES part).
 	 */
 	public ZQuery getQuery() {
-		if (!(valueSpec_ instanceof ZQuery)) {
+		if (!(valueSpec instanceof ZQuery)) {
 			return null;
 		}
-		return (ZQuery) valueSpec_;
+		return (ZQuery) valueSpec;
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer("insert into " + table_);
-		if (columns_ != null && columns_.size() > 0) {
-			// buf.append(" " + columns_.toString());
-			buf.append("(" + columns_.get(0));
-			for (int i = 1; i < columns_.size(); i++) {
-				buf.append("," + columns_.get(i));
+		String ret = "insert into " + table;
+		if (columns != null && columns.size() > 0) {
+
+			ret += "(" + columns.get(0);
+			for (int i = 1; i < columns.size(); i++) {
+				ret += "," + columns.get(i);
 			}
-			buf.append(")");
+			ret += ")";
 		}
 
-		String vlist = valueSpec_.toString();
-		buf.append(" ");
+		String vlist = valueSpec.toString();
+		ret += " ";
 		if (getValues() != null) {
-			buf.append("values ");
+			ret += "values ";
 		}
 		if (vlist.startsWith("(")) {
-			buf.append(vlist);
+			ret += vlist;
 		} else {
-			buf.append(" (" + vlist + ")");
+			ret += " (" + vlist + ")";
 		}
-		return buf.toString();
+		return ret;
 	}
 }

@@ -29,29 +29,29 @@ import java.util.Map;
 public class ZUpdate implements ZStatement {
 	private static final long serialVersionUID = -7716181084287664850L;
 
-	String table_;
-	String alias_ = null;
-	Map<String, ZExp> set_;
-	ZExp where_ = null;
-	List<String> columns_ = null;
+	private String table;
+	private String alias = null;
+	private Map<String, ZExp> set;
+	private ZExp where = null;
+	private List<String> columns = null;
 
 	/**
 	 * Create an UPDATE statement on a given table.
 	 */
 	public ZUpdate(String tab) {
-		table_ = new String(tab);
+		table = new String(tab);
 	}
 
 	public String getTable() {
-		return table_;
+		return table;
 	}
 
 	public void setAlias(String alias) {
-		alias_ = alias;
+		this.alias = alias;
 	}
 
 	public String getAlias() {
-		return alias_;
+		return alias;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class ZUpdate implements ZStatement {
 	 *            Expressions.
 	 */
 	public void addSet(Map<String, ZExp> t) {
-		set_ = t;
+		set = t;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ZUpdate implements ZStatement {
 	 *         (Expressions that specify column values: for example, ZConstant objects like "Smith").
 	 */
 	public Map<String, ZExp> getSet() {
-		return set_;
+		return set;
 	}
 
 	/**
@@ -85,14 +85,14 @@ public class ZUpdate implements ZStatement {
 	 *            The column value
 	 */
 	public void addColumnUpdate(String col, ZExp val) {
-		if (set_ == null) {
-			set_ = new HashMap<String, ZExp>();
+		if (set == null) {
+			set = new HashMap<String, ZExp>();
 		}
-		set_.put(col, val);
-		if (columns_ == null) {
-			columns_ = new ArrayList<String>();
+		set.put(col, val);
+		if (columns == null) {
+			columns = new ArrayList<String>();
 		}
-		columns_.add(col);
+		columns.add(col);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ZUpdate implements ZStatement {
 	 * @return a ZExp, like a ZConstant representing a value, or a more complex SQL expression.
 	 */
 	public ZExp getColumnUpdate(String col) {
-		return set_.get(col);
+		return set.get(col);
 	}
 
 	/**
@@ -121,11 +121,11 @@ public class ZUpdate implements ZStatement {
 		if (--index < 0) {
 			return null;
 		}
-		if (columns_ == null || index >= columns_.size()) {
+		if (columns == null || index >= columns.size()) {
 			return null;
 		}
-		String col = columns_.get(index);
-		return set_.get(col);
+		String col = columns.get(index);
+		return set.get(col);
 	}
 
 	/**
@@ -141,20 +141,20 @@ public class ZUpdate implements ZStatement {
 		if (--index < 0) {
 			return null;
 		}
-		if (columns_ == null || index >= columns_.size()) {
+		if (columns == null || index >= columns.size()) {
 			return null;
 		}
-		return columns_.get(index);
+		return columns.get(index);
 	}
 
 	/**
 	 * Returns the number of column/value pairs in the SET... clause.
 	 */
 	public int getColumnUpdateCount() {
-		if (set_ == null) {
+		if (set == null) {
 			return 0;
 		}
-		return set_.size();
+		return set.size();
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class ZUpdate implements ZStatement {
 	 *            An SQL Expression compatible with a WHERE... clause.
 	 */
 	public void addWhere(ZExp w) {
-		where_ = w;
+		where = w;
 	}
 
 	/**
@@ -173,35 +173,35 @@ public class ZUpdate implements ZStatement {
 	 * @return An SQL Expression compatible with a WHERE... clause.
 	 */
 	public ZExp getWhere() {
-		return where_;
+		return where;
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer("update " + table_);
-		if (alias_ != null) {
-			buf.append(" " + alias_);
+		String ret = "update " + table;
+		if (alias != null) {
+			ret += " " + alias;
 		}
-		buf.append(" set ");
+		ret += " set ";
 
 		Iterator<String> e;
-		if (columns_ != null) {
-			e = columns_.iterator();
+		if (columns != null) {
+			e = columns.iterator();
 		} else {
-			e = set_.keySet().iterator();
+			e = set.keySet().iterator();
 		}
 		boolean first = true;
 		while (e.hasNext()) {
 			String key = e.next();
 			if (!first) {
-				buf.append(", ");
+				ret += ", ";
 			}
-			buf.append(key + "=" + set_.get(key).toString());
+			ret += key + "=" + set.get(key).toString();
 			first = false;
 		}
 
-		if (where_ != null) {
-			buf.append(" where " + where_.toString());
+		if (where != null) {
+			ret += " where " + where.toString();
 		}
-		return buf.toString();
+		return ret;
 	}
 }

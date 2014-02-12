@@ -25,8 +25,9 @@ import java.util.List;
 public class ZGroupBy implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1155146337535072741L;
-	List<ZExp> groupby_;
-	ZExp having_ = null;
+
+	private List<ZExp> groupby;
+	private ZExp having = null;
 
 	/**
 	 * Create a GROUP BY given a set of Expressions
@@ -35,7 +36,7 @@ public class ZGroupBy implements java.io.Serializable {
 	 *            A vector of SQL Expressions (ZExp objects).
 	 */
 	public ZGroupBy(List<ZExp> exps) {
-		groupby_ = exps;
+		groupby = exps;
 	}
 
 	/**
@@ -45,7 +46,7 @@ public class ZGroupBy implements java.io.Serializable {
 	 *            An SQL Expression (the HAVING clause)
 	 */
 	public void setHaving(ZExp e) {
-		having_ = e;
+		having = e;
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class ZGroupBy implements java.io.Serializable {
 	 * @return A vector of SQL Expressions (ZExp objects)
 	 */
 	public List<ZExp> getGroupBy() {
-		return groupby_;
+		return groupby;
 	}
 
 	/**
@@ -63,20 +64,19 @@ public class ZGroupBy implements java.io.Serializable {
 	 * @return An SQL expression
 	 */
 	public ZExp getHaving() {
-		return having_;
+		return having;
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer("group by ");
+		String ret = "group by ";
 
-		// buf.append(groupby_.toString());
-		buf.append(groupby_.get(0).toString());
-		for (int i = 1; i < groupby_.size(); i++) {
-			buf.append(", " + groupby_.get(i).toString());
+		ret += groupby.get(0).toString();
+		for (int i = 1; i < groupby.size(); i++) {
+			ret += ", " + groupby.get(i).toString();
 		}
-		if (having_ != null) {
-			buf.append(" having " + having_.toString());
+		if (having != null) {
+			ret += " having " + having.toString();
 		}
-		return buf.toString();
+		return ret;
 	}
 }

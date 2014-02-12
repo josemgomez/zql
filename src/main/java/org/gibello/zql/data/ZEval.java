@@ -49,75 +49,76 @@ public class ZEval {
 		if (tuple == null || exp == null) {
 			throw new SQLException("ZEval.eval(): null argument or operator");
 		}
-		if (!(exp instanceof ZExpression))
+		if (!(exp instanceof ZExpression)) {
 			throw new SQLException("ZEval.eval(): only expressions are supported");
+		}
 
 		ZExpression pred = (ZExpression) exp;
 		String op = pred.getOperator();
 
-		if (op.equals("AND")) {
+		switch (op) {
+
+		case "AND":
 			boolean and = true;
-			for (int i = 0; i < pred.nbOperands(); i++) {
+			for (int i = 0; and && i < pred.nbOperands(); i++) {
 				and &= eval(tuple, pred.getOperand(i));
 			}
 			return and;
-		} else if (op.equals("OR")) {
+		case "OR":
 			boolean or = false;
 			for (int i = 0; i < pred.nbOperands(); i++) {
 				or |= eval(tuple, pred.getOperand(i));
 			}
 			return or;
-		} else if (op.equals("NOT")) {
+		case "NOT":
 			return !eval(tuple, pred.getOperand(0));
-
-		} else if (op.equals("=")) {
+		case "=":
 			return evalCmp(tuple, pred.getOperands()) == 0;
-		} else if (op.equals("!=")) {
+		case "!=":
 			return evalCmp(tuple, pred.getOperands()) != 0;
-		} else if (op.equals("<>")) {
+		case "<>":
 			return evalCmp(tuple, pred.getOperands()) != 0;
-		} else if (op.equals("#")) {
+		case "#":
 			throw new SQLException("ZEval.eval(): Operator # not supported");
-		} else if (op.equals(">")) {
+		case ">":
 			return evalCmp(tuple, pred.getOperands()) > 0;
-		} else if (op.equals(">=")) {
+		case ">=":
 			return evalCmp(tuple, pred.getOperands()) >= 0;
-		} else if (op.equals("<")) {
+		case "<":
 			return evalCmp(tuple, pred.getOperands()) < 0;
-		} else if (op.equals("<=")) {
+		case "<=":
 			return evalCmp(tuple, pred.getOperands()) <= 0;
-
-		} else if (op.equals("BETWEEN") || op.equals("NOT BETWEEN")) {
-
-			// Between: borders included
+		case "BETWEEN":
+		case "NOT BETWEEN":
 			ZExpression newexp = new ZExpression("AND", new ZExpression(">=", pred.getOperand(0), pred.getOperand(1)),
 					new ZExpression("<=", pred.getOperand(0), pred.getOperand(2)));
 
-			if (op.equals("NOT BETWEEN"))
-				return !eval(tuple, newexp);
-			else
-				return eval(tuple, newexp);
-
-		} else if (op.equals("LIKE") || op.equals("NOT LIKE")) {
-			boolean like = evalLike(tuple, pred.getOperands());
-			return op.equals("LIKE") ? like : !like;
-
-		} else if (op.equals("IN") || op.equals("NOT IN")) {
-
-			ZExpression newexp = new ZExpression("OR");
-
-			for (int i = 1; i < pred.nbOperands(); i++) {
-				newexp.addOperand(new ZExpression("=", pred.getOperand(0), pred.getOperand(i)));
-			}
-
-			if (op.equals("NOT IN")) {
+			if ("NOT BETWEEN".equals(op)) {
 				return !eval(tuple, newexp);
 			} else {
 				return eval(tuple, newexp);
 			}
 
-		} else if (op.equals("IS NULL")) {
+		case "LIKE":
+		case "NOT LIKE":
+			boolean like = evalLike(tuple, pred.getOperands());
+			return "LIKE".equals(op) ? like : !like;
 
+		case "IN":
+		case "NOT IN":
+			newexp = new ZExpression("OR");
+
+			for (int i = 1; i < pred.nbOperands(); i++) {
+				newexp.addOperand(new ZExpression("=", pred.getOperand(0), pred.getOperand(i)));
+			}
+
+			if ("NOT IN".equals(op)) {
+				return !eval(tuple, newexp);
+			} else {
+				return eval(tuple, newexp);
+			}
+
+		case "IS NULL":
 			if (pred.nbOperands() <= 0 || pred.getOperand(0) == null) {
 				return true;
 			}
@@ -128,13 +129,12 @@ public class ZEval {
 				throw new SQLException("ZEval.eval(): can't eval IS (NOT) NULL");
 			}
 
-		} else if (op.equals("IS NOT NULL")) {
+		case "IS NOT NULL":
+			ZExpression xs = new ZExpression("IS NULL");
+			xs.setOperands(pred.getOperands());
+			return !eval(tuple, xs);
 
-			ZExpression x = new ZExpression("IS NULL");
-			x.setOperands(pred.getOperands());
-			return !eval(tuple, x);
-
-		} else {
+		default:
 			throw new SQLException("ZEval.eval(): Unknown operator " + op);
 		}
 
@@ -212,60 +212,53 @@ public class ZEval {
 
 		String op = exp.getOperator();
 
-		Object o1 = evalExpValue(tuple, (ZExp) exp.getOperand(0));
-		if (!(o1 instanceof Double))
+		Object o1 = evalExpValue(tuple, exp.getOperand(0));
+		if (!(o1 instanceof Double)) {
 			throw new SQLException("ZEval.evalNumericExp(): expression not numeric");
+		}
 		Double dobj = (Double) o1;
 
-		if (op.equals("+")) {
-
+		switch (op) {
+		case "+":
 			double val = dobj.doubleValue();
 			for (int i = 1; i < exp.nbOperands(); i++) {
-				Object obj = evalExpValue(tuple, (ZExp) exp.getOperand(i));
+				Object obj = evalExpValue(tuple, exp.getOperand(i));
 				val += ((Number) obj).doubleValue();
 			}
 			return val;
-
-		} else if (op.equals("-")) {
-
-			double val = dobj.doubleValue();
+		case "-":
+			val = dobj.doubleValue();
 			if (exp.nbOperands() == 1) {
 				return -val;
 			}
 			for (int i = 1; i < exp.nbOperands(); i++) {
-				Object obj = evalExpValue(tuple, (ZExp) exp.getOperand(i));
+				Object obj = evalExpValue(tuple, exp.getOperand(i));
 				val -= ((Number) obj).doubleValue();
 			}
 			return val;
 
-		} else if (op.equals("*")) {
-
-			double val = dobj.doubleValue();
+		case "*":
+			val = dobj.doubleValue();
 			for (int i = 1; i < exp.nbOperands(); i++) {
-				Object obj = evalExpValue(tuple, (ZExp) exp.getOperand(i));
+				Object obj = evalExpValue(tuple, exp.getOperand(i));
 				val *= ((Number) obj).doubleValue();
 			}
 			return val;
-
-		} else if (op.equals("/")) {
-
-			double val = dobj.doubleValue();
+		case "/":
+			val = dobj.doubleValue();
 			for (int i = 1; i < exp.nbOperands(); i++) {
-				Object obj = evalExpValue(tuple, (ZExp) exp.getOperand(i));
+				Object obj = evalExpValue(tuple, exp.getOperand(i));
 				val /= ((Number) obj).doubleValue();
 			}
 			return val;
-
-		} else if (op.equals("**")) {
-
-			double val = dobj.doubleValue();
+		case "**":
+			val = dobj.doubleValue();
 			for (int i = 1; i < exp.nbOperands(); i++) {
-				Object obj = evalExpValue(tuple, (ZExp) exp.getOperand(i));
+				Object obj = evalExpValue(tuple, exp.getOperand(i));
 				val = Math.pow(val, ((Number) obj).doubleValue());
 			}
 			return val;
-
-		} else {
+		default:
 			throw new SQLException("ZEval.evalNumericExp(): Unknown operator " + op);
 		}
 	}
@@ -292,8 +285,10 @@ public class ZEval {
 			case COLUMNNAME:
 
 				Object o1 = tuple.getAttValue(c.getValue());
-				if (o1 == null)
+				if (o1 == null) {
 					throw new SQLException("ZEval.evalExpValue(): unknown column " + c.getValue());
+				}
+
 				if (isDouble(o1)) {
 					o2 = Double.valueOf(o1.toString());
 				} else {

@@ -23,11 +23,11 @@ package org.gibello.zql;
 public class ZOrderBy implements java.io.Serializable {
 	private static final long serialVersionUID = 8314427185544549626L;
 
-	final ZExp exp_;
-	boolean asc_ = true;
+	private final ZExp exp;
+	private boolean asc = true;
 
 	public ZOrderBy(ZExp e) {
-		exp_ = e;
+		exp = e;
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class ZOrderBy implements java.io.Serializable {
 	 *            true for ascending order, false for descending order.
 	 */
 	public void setAscOrder(boolean a) {
-		asc_ = a;
+		asc = a;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class ZOrderBy implements java.io.Serializable {
 	 * @return true if ascending order, false if descending order.
 	 */
 	public boolean getAscOrder() {
-		return asc_;
+		return asc;
 	}
 
 	/**
@@ -55,10 +55,10 @@ public class ZOrderBy implements java.io.Serializable {
 	 * @return An expression (generally, a ZConstant that represents a column name).
 	 */
 	public ZExp getExpression() {
-		return exp_;
+		return exp;
 	}
 
 	public String toString() {
-		return exp_.toString() + " " + (asc_ ? "ASC" : "DESC");
+		return exp.toString() + " " + (asc ? "ASC" : "DESC");
 	}
 }

@@ -27,8 +27,8 @@ import java.util.List;
 public class ZExpression implements ZExp {
 	private static final long serialVersionUID = 3034365237806330384L;
 
-	String op_ = null;
-	List<ZExp> operands_ = null;
+	private String op = null;
+	private List<ZExp> operands = null;
 
 	/**
 	 * Create an SQL Expression given the operator
@@ -37,7 +37,7 @@ public class ZExpression implements ZExp {
 	 *            The operator
 	 */
 	public ZExpression(String op) {
-		op_ = new String(op);
+		op = new String(op);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ZExpression implements ZExp {
 	 *            The 1st operand
 	 */
 	public ZExpression(String op, ZExp o1) {
-		op_ = new String(op);
+		op = new String(op);
 		addOperand(o1);
 	}
 
@@ -64,7 +64,7 @@ public class ZExpression implements ZExp {
 	 *            The 2nd operand
 	 */
 	public ZExpression(String op, ZExp o1, ZExp o2) {
-		op_ = new String(op);
+		op = new String(op);
 		addOperand(o1);
 		addOperand(o2);
 	}
@@ -75,7 +75,7 @@ public class ZExpression implements ZExp {
 	 * @return the operator.
 	 */
 	public String getOperator() {
-		return op_;
+		return op;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ZExpression implements ZExp {
 	 *            A vector that contains all operands (ZExp objects).
 	 */
 	public void setOperands(List<ZExp> v) {
-		operands_ = v;
+		operands = v;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class ZExpression implements ZExp {
 	 * @return the operands (as a Vector of ZExp objects).
 	 */
 	public List<ZExp> getOperands() {
-		return operands_;
+		return operands;
 	}
 
 	/**
@@ -104,10 +104,10 @@ public class ZExpression implements ZExp {
 	 *            The operand to add.
 	 */
 	public void addOperand(ZExp o) {
-		if (operands_ == null) {
-			operands_ = new ArrayList<ZExp>();
+		if (operands == null) {
+			operands = new ArrayList<ZExp>();
 		}
-		operands_.add(o);
+		operands.add(o);
 	}
 
 	/**
@@ -118,10 +118,10 @@ public class ZExpression implements ZExp {
 	 * @return The operand at the specified index, null if out of bounds.
 	 */
 	public ZExp getOperand(int pos) {
-		if (operands_ == null || pos >= operands_.size()) {
+		if (operands == null || pos >= operands.size()) {
 			return null;
 		}
-		return operands_.get(pos);
+		return operands.get(pos);
 	}
 
 	/**
@@ -130,10 +130,10 @@ public class ZExpression implements ZExp {
 	 * @return The number of operands
 	 */
 	public int nbOperands() {
-		if (operands_ == null) {
+		if (operands == null) {
 			return 0;
 		}
-		return operands_.size();
+		return operands.size();
 	}
 
 	/**
@@ -143,34 +143,34 @@ public class ZExpression implements ZExp {
 	 * @return The current expression in reverse polish notation (a String)
 	 */
 	public String toReversePolish() {
-		StringBuffer buf = new StringBuffer("(");
-		buf.append(op_);
+		String ret = "(";
+		ret += op;
 		for (int i = 0; i < nbOperands(); i++) {
 			ZExp opr = getOperand(i);
 			if (opr instanceof ZExpression) {
-				buf.append(" " + ((ZExpression) opr).toReversePolish());
+				ret += " " + ((ZExpression) opr).toReversePolish();
 				// Warning recursive call
 			} else if (opr instanceof ZQuery) {
-				buf.append(" (" + opr.toString() + ")");
+				ret += " (" + opr.toString() + ")";
 			} else {
-				buf.append(" " + opr.toString());
+				ret += " " + opr.toString();
 			}
 		}
-		buf.append(")");
-		return buf.toString();
+		ret += ")";
+		return ret;
 	}
 
 	public String toString() {
-		if (op_.equals("?")) {
-			return op_; // For prepared columns ("?")
+		if ("?".equals(op)) {
+			return op; // For prepared columns ("?")
 		}
-		if (ZUtils.isCustomFunction(op_) >= 0) {
+		if (ZUtils.isCustomFunction(op) >= 0) {
 			return formatFunction();
 		}
 
-		StringBuffer buf = new StringBuffer();
-		if (needPar(op_)) {
-			buf.append("(");
+		String ret = "";
+		if (needPar(op)) {
+			ret += "(";
 		}
 
 		ZExp operand;
@@ -180,85 +180,85 @@ public class ZExpression implements ZExp {
 			operand = getOperand(0);
 			if (operand instanceof ZConstant) {
 				// Operator may be an aggregate function (MAX, SUM...)
-				if (ZUtils.isAggregate(op_)) {
-					buf.append(op_ + "(" + operand.toString() + ")");
-				} else if (op_.equals("IS NULL") || op_.equals("IS NOT NULL")) {
-					buf.append(operand.toString() + " " + op_);
+				if (ZUtils.isAggregate(op)) {
+					ret += op + "(" + operand.toString() + ")";
+				} else if ("IS NULL".equals(op) || "IS NOT NULL".equals(op)) {
+					ret += operand.toString() + " " + op;
 					// "," = list of values, here just one single value
-				} else if (op_.equals(",")) {
-					buf.append(operand.toString());
+				} else if (",".equals(op)) {
+					ret += operand.toString();
 				} else {
-					buf.append(op_ + " " + operand.toString());
+					ret += op + " " + operand.toString();
 				}
 			} else if (operand instanceof ZQuery) {
-				buf.append(op_ + " (" + operand.toString() + ")");
+				ret += op + " (" + operand.toString() + ")";
 			} else {
-				if (op_.equals("IS NULL") || op_.equals("IS NOT NULL")) {
-					buf.append(operand.toString() + " " + op_);
+				if ("IS NULL".equals(op) || "IS NOT NULL".equals(op)) {
+					ret += operand.toString() + " " + op;
 					// "," = list of values, here just one single value
-				} else if (op_.equals(",")) {
-					buf.append(operand.toString());
+				} else if (",".equals(op)) {
+					ret += operand.toString();
 				} else {
-					buf.append(op_ + " " + operand.toString());
+					ret += op + " " + operand.toString();
 				}
 			}
 			break;
 
 		case 3:
-			if (op_.toUpperCase().endsWith("BETWEEN")) {
-				buf.append(getOperand(0).toString() + " " + op_ + " " + getOperand(1).toString() + " AND "
-						+ getOperand(2).toString());
+			if (op.toUpperCase().endsWith("BETWEEN")) {
+				ret += getOperand(0).toString() + " " + op + " " + getOperand(1).toString() + " AND "
+						+ getOperand(2).toString();
 				break;
 			}
 		default:
 
-			boolean in_op = op_.equals("IN") || op_.equals("NOT IN");
+			boolean in_op = "IN".equals(op) || "NOT IN".equals(op);
 
 			int nb = nbOperands();
 			for (int i = 0; i < nb; i++) {
 
 				if (in_op && i == 1) {
-					buf.append(" " + op_ + " (");
+					ret += " " + op + " (";
 				}
 
 				operand = getOperand(i);
 				if (operand instanceof ZQuery && !in_op) {
-					buf.append("(" + operand.toString() + ")");
+					ret += "(" + operand.toString() + ")";
 				} else {
-					buf.append(operand.toString());
+					ret += operand.toString();
 				}
 				if (i < nb - 1) {
-					if (op_.equals(",") || (in_op && i > 0)) {
-						buf.append(", ");
+					if (",".equals(op) || (in_op && i > 0)) {
+						ret += ", ";
 					} else if (!in_op) {
-						buf.append(" " + op_ + " ");
+						ret += " " + op + " ";
 					}
 				}
 			}
 			if (in_op) {
-				buf.append(")");
+				ret += ")";
 			}
 			break;
 		}
 
-		if (needPar(op_)) {
-			buf.append(")");
+		if (needPar(op)) {
+			ret += ")";
 		}
-		return buf.toString();
+		return ret;
 	}
 
 	private boolean needPar(String op) {
 		String tmp = op.toUpperCase();
-		return !(tmp.equals("ANY") || tmp.equals("ALL") || tmp.equals("UNION") || ZUtils.isAggregate(tmp));
+		return !("ANY".equals(tmp) || "ALL".equals(tmp) || "UNION".equals(tmp) || ZUtils.isAggregate(tmp));
 	}
 
 	private String formatFunction() {
-		StringBuffer b = new StringBuffer(op_ + "(");
+		String ret = op + "(";
 		int nb = nbOperands();
 		for (int i = 0; i < nb; i++) {
-			b.append(getOperand(i).toString() + (i < nb - 1 ? "," : ""));
+			ret += getOperand(i).toString() + (i < nb - 1 ? "," : "");
 		}
-		b.append(")");
-		return b.toString();
+		ret += ")";
+		return ret;
 	}
 }

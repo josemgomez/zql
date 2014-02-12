@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ZqlParser {
 
-	ZqlJJParser _parser = null;
+	private ZqlJJParser parser = null;
 
 	/**
 	 * Test program: Parses SQL statements from stdin or from a text file.<br>
@@ -92,10 +92,10 @@ public class ZqlParser {
 	 * Initialize (or re-initialize) the input stream for the parser.
 	 */
 	public void initParser(InputStream in) {
-		if (_parser == null) {
-			_parser = new ZqlJJParser(in);
+		if (parser == null) {
+			parser = new ZqlJJParser(in);
 		} else {
-			_parser.ReInit(in);
+			parser.ReInit(in);
 		}
 	}
 
@@ -109,10 +109,10 @@ public class ZqlParser {
 	 * @return An SQL statement, or null if there's no more statement.
 	 */
 	public ZStatement readStatement() throws ParseException {
-		if (_parser == null) {
+		if (parser == null) {
 			throw new ParseException("Parser not initialized: use initParser(InputStream);");
 		}
-		return _parser.SQLStatement();
+		return parser.SQLStatement();
 	}
 
 	/**
@@ -122,10 +122,10 @@ public class ZqlParser {
 	 * @return A vector of ZStatement objects (SQL statements).
 	 */
 	public List<ZStatement> readStatements() throws ParseException {
-		if (_parser == null) {
+		if (parser == null) {
 			throw new ParseException("Parser not initialized: use initParser(InputStream);");
 		}
-		return _parser.SQLStatements();
+		return parser.SQLStatements();
 	}
 
 	/**
@@ -134,9 +134,9 @@ public class ZqlParser {
 	 * @return An SQL expression.
 	 */
 	public ZExp readExpression() throws ParseException {
-		if (_parser == null) {
+		if (parser == null) {
 			throw new ParseException("Parser not initialized: use initParser(InputStream);");
 		}
-		return _parser.SQLExpression();
+		return parser.SQLExpression();
 	}
 }

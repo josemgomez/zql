@@ -30,23 +30,23 @@ public class ZTuple {
 	/**
 	 * the names of the attributes
 	 */
-	private List<String> attributes_;
+	private List<String> attributes;
 	/**
 	 * the values of the attributes
 	 */
-	private List<Object> values_;
+	private List<Object> values;
 	/**
 	 * hashtable to locate attribute names more easily
 	 */
-	private Map<String, Integer> searchTable_;
+	private Map<String, Integer> searchTable;
 
 	/**
 	 * The simplest constructor
 	 */
 	public ZTuple() {
-		attributes_ = new ArrayList<String>();
-		values_ = new ArrayList<Object>();
-		searchTable_ = new HashMap<String, Integer>();
+		attributes = new ArrayList<String>();
+		values = new ArrayList<Object>();
+		searchTable = new HashMap<String, Integer>();
 	}
 
 	/**
@@ -104,16 +104,16 @@ public class ZTuple {
 	 */
 	public void setAtt(String name, Object value) {
 		if (name != null) {
-			boolean exist = searchTable_.containsKey(name);
+			boolean exist = searchTable.containsKey(name);
 
 			if (exist) {
-				int i = searchTable_.get(name).intValue();
-				values_.set(i, value);
+				int i = searchTable.get(name).intValue();
+				values.set(i, value);
 			} else {
-				int i = attributes_.size();
-				attributes_.add(name);
-				values_.add(value);
-				searchTable_.put(name, new Integer(i));
+				int i = attributes.size();
+				attributes.add(name);
+				values.add(value);
+				searchTable.put(name, new Integer(i));
 			}
 		}
 	}
@@ -126,8 +126,8 @@ public class ZTuple {
 	 * @return a String
 	 */
 	public String getAttName(int index) {
-		if (index >= 0 && index < attributes_.size()) {
-			return attributes_.get(index);
+		if (index >= 0 && index < attributes.size()) {
+			return attributes.get(index);
 		}
 		return null;
 	}
@@ -144,7 +144,7 @@ public class ZTuple {
 			return -1;
 		}
 
-		Integer index = searchTable_.get(name);
+		Integer index = searchTable.get(name);
 		if (index != null) {
 			return index.intValue();
 		} else {
@@ -160,8 +160,8 @@ public class ZTuple {
 	 * @return an Object (null if index is out of bound)
 	 */
 	public Object getAttValue(int index) {
-		if (index >= 0 && index < values_.size()) {
-			return values_.get(index);
+		if (index >= 0 && index < values.size()) {
+			return values.get(index);
 		}
 		return null;
 	}
@@ -175,12 +175,12 @@ public class ZTuple {
 		boolean exist = false;
 
 		if (name != null) {
-			exist = searchTable_.containsKey(name);
+			exist = searchTable.containsKey(name);
 		}
 
 		if (exist) {
-			int index = searchTable_.get(name).intValue();
-			return values_.get(index);
+			int index = searchTable.get(name).intValue();
+			return values.get(index);
 		} else {
 			return null;
 		}
@@ -195,7 +195,7 @@ public class ZTuple {
 	 */
 	public boolean isAttribute(String attrName) {
 		if (attrName != null) {
-			return searchTable_.containsKey(attrName);
+			return searchTable.containsKey(attrName);
 		} else {
 			return false;
 		}
@@ -207,7 +207,7 @@ public class ZTuple {
 	 * @return int the number of attributes
 	 */
 	public int getNumAtt() {
-		return values_.size();
+		return values.size();
 	}
 
 	/**
@@ -221,42 +221,42 @@ public class ZTuple {
 		String attS;
 		String valueS;
 
-		StringBuffer resp = new StringBuffer();
-		resp.append("[");
-		if (attributes_.size() > 0) {
-			att = attributes_.get(0);
+		String ret = "[";
+
+		if (attributes.size() > 0) {
+			att = attributes.get(0);
 			if (att == null) {
 				attS = "(null)";
 			} else {
 				attS = att.toString();
 			}
 
-			value = values_.get(0);
+			value = values.get(0);
 			if (value == null) {
 				valueS = "(null)";
 			} else {
 				valueS = value.toString();
 			}
-			resp.append(attS + " = " + valueS);
+			ret += attS + " = " + valueS;
 		}
 
-		for (int i = 1; i < attributes_.size(); i++) {
-			att = attributes_.get(i);
+		for (int i = 1; i < attributes.size(); i++) {
+			att = attributes.get(i);
 			if (att == null) {
 				attS = "(null)";
 			} else {
 				attS = att.toString();
 			}
 
-			value = values_.get(i);
+			value = values.get(i);
 			if (value == null) {
 				valueS = "(null)";
 			} else {
 				valueS = value.toString();
 			}
-			resp.append(", " + attS + " = " + valueS);
+			ret += ", " + attS + " = " + valueS;
 		}
-		resp.append("]");
-		return resp.toString();
+		ret += "]";
+		return ret;
 	}
 }

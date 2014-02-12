@@ -21,24 +21,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ZUtils {
+	private ZUtils() {
+	}
 
-	private static Map<String, Integer> fcts_ = null;
+	private static Map<String, Integer> fcts = null;
 
 	public static final int VARIABLE_PLIST = 10000;
 
 	public static void addCustomFunction(String fct, int nparm) {
-		if (fcts_ == null) {
-			fcts_ = new HashMap<String, Integer>();
+		if (fcts == null) {
+			fcts = new HashMap<String, Integer>();
 		}
 		if (nparm < 0) {
 			nparm = 1;
 		}
-		fcts_.put(fct.toUpperCase(), new Integer(nparm));
+		fcts.put(fct.toUpperCase(), new Integer(nparm));
 	}
 
 	public static int isCustomFunction(String fct) {
 		Integer nparm;
-		if (fct == null || fct.length() < 1 || fcts_ == null || (nparm = fcts_.get(fct.toUpperCase())) == null) {
+		if (fct == null || fct.length() < 1 || fcts == null || (nparm = fcts.get(fct.toUpperCase())) == null) {
 			return -1;
 		}
 		return nparm.intValue();
@@ -46,8 +48,8 @@ public class ZUtils {
 
 	public static boolean isAggregate(String op) {
 		String tmp = op.toUpperCase().trim();
-		return tmp.equals("SUM") || tmp.equals("AVG") || tmp.equals("MAX") || tmp.equals("MIN") || tmp.equals("COUNT")
-				|| (fcts_ != null && fcts_.get(tmp) != null);
+		return "SUM".equals(tmp) || "AVG".equals(tmp) || "MAX".equals(tmp) || "MIN".equals(tmp) || "COUNT".equals(tmp)
+				|| (fcts != null && fcts.get(tmp) != null);
 	}
 
 	public static String getAggregateCall(String c) {

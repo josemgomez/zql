@@ -25,8 +25,8 @@ public class ZDelete implements ZStatement {
 
 	private static final long serialVersionUID = -6421794692770880027L;
 
-	final String table_;
-	ZExp where_ = null;
+	private final String table;
+	private ZExp where = null;
 
 	/**
 	 * Create a DELETE statement on a given table
@@ -35,7 +35,7 @@ public class ZDelete implements ZStatement {
 	 *            the table name
 	 */
 	public ZDelete(String tab) {
-		table_ = new String(tab);
+		table = new String(tab);
 	}
 
 	/**
@@ -45,14 +45,14 @@ public class ZDelete implements ZStatement {
 	 *            An SQL expression compatible with a WHERE clause
 	 */
 	public void addWhere(ZExp w) {
-		where_ = w;
+		where = w;
 	}
 
 	/**
 	 * @return The table concerned by the DELETE statement.
 	 */
 	public String getTable() {
-		return table_;
+		return table;
 	}
 
 	/**
@@ -60,18 +60,18 @@ public class ZDelete implements ZStatement {
 	 *         clause).
 	 */
 	public ZExp getWhere() {
-		return where_;
+		return where;
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer("delete ");
-		if (where_ != null) {
-			buf.append("from ");
+		String res = "delete ";
+		if (where != null) {
+			res += "from ";
 		}
-		buf.append(table_);
-		if (where_ != null) {
-			buf.append(" where " + where_.toString());
+		res += table;
+		if (where != null) {
+			res += " where " + where.toString();
 		}
-		return buf.toString();
+		return res;
 	}
 }

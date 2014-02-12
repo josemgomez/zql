@@ -31,36 +31,36 @@ public class ZConstant implements ZExp {
 		UNKNOWN, COLUMNNAME, NULL, NUMBER, STRING
 	};
 
-	final Type type_;
-	final String val_;
+	final Type type;
+	final String val;
 
 	/**
 	 * Create a new constant, given its name and type.
 	 */
 	public ZConstant(String v, Type typ) {
-		val_ = v;
-		type_ = typ;
+		val = v;
+		type = typ;
 	}
 
 	/*
 	 * @return the constant value
 	 */
 	public String getValue() {
-		return val_;
+		return val;
 	}
 
 	/*
 	 * @return the constant type
 	 */
 	public Type getType() {
-		return type_;
+		return type;
 	}
 
 	public String toString() {
-		if (type_ == Type.STRING) {
-			return '\'' + val_ + '\'';
+		if (type == Type.STRING) {
+			return '\'' + val + '\'';
 		} else {
-			return val_;
+			return val;
 		}
 	}
 }

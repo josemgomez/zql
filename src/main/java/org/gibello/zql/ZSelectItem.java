@@ -23,8 +23,8 @@ package org.gibello.zql;
 public class ZSelectItem extends ZAliasedName {
 	private static final long serialVersionUID = -7275987727679325506L;
 
-	ZExp expression_ = null;
-	String aggregate_ = null;
+	private ZExp expression = null;
+	private String aggregate = null;
 
 	/**
 	 * Create a new SELECT item
@@ -51,7 +51,7 @@ public class ZSelectItem extends ZAliasedName {
 	 */
 	public ZExp getExpression() {
 		if (isExpression()) {
-			return expression_;
+			return expression;
 		} else if (isWildcard()) {
 			return null;
 		} else {
@@ -64,8 +64,8 @@ public class ZSelectItem extends ZAliasedName {
 	 * table1; (a+b is an expression)
 	 */
 	public void setExpression(ZExp e) {
-		expression_ = e;
-		strform_ = expression_.toString();
+		expression = e;
+		setStrform(expression.toString());
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ZSelectItem extends ZAliasedName {
 	 *         expression, not c)
 	 */
 	public boolean isExpression() {
-		return (expression_ != null && expression_ instanceof ZExpression);
+		return (expression instanceof ZExpression);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ZSelectItem extends ZAliasedName {
 	 *            The name of the aggregate function (a String, like SUM, AVG, MAX, MIN)
 	 */
 	public void setAggregate(String a) {
-		aggregate_ = a;
+		aggregate = a;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class ZSelectItem extends ZAliasedName {
 	 *         item.
 	 */
 	public String getAggregate() {
-		return aggregate_;
+		return aggregate;
 	}
 
 	/**

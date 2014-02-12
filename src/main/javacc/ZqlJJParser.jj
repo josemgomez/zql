@@ -279,7 +279,7 @@ ZLockTable LockTableStatement():
   "LOCK" "TABLE" s = TableReference() { v.add(s); }
   ("," s = TableReference() { v.add(s); } )*
   "IN" s = LockMode() { lck.setLockMode(s); } "MODE"
-  ["NOWAIT" { lck.nowait_ = true; }] ";"
+  ["NOWAIT" { lck.setNowait(true); }] ";"
   { lck.addTables(v); return lck; }
 }
 
@@ -304,7 +304,7 @@ ZTransactStmt SetTransactionStatement():
 }
 {
   "SET" "TRANSACTION" ("READ" ("ONLY" { rdonly = true; } | "WRITE")) ";"
-  { t.readOnly_ = rdonly; return t; }
+  { t.setReadOnly(rdonly); return t; }
 }
 
 // LockMode ::= ROW SHARE | ROW EXCLUSIVE
@@ -487,7 +487,7 @@ ZQuery SelectStatement():
 {
   q = SelectWithoutOrder()
   [ v = OrderByClause() { q.addOrderBy(v); } ]
-  [ ForUpdateClause() { q.forupdate_ = true; } ]
+  [ ForUpdateClause() { q.setForUpdate(true); } ]
   { return q; }
 
 }
@@ -502,7 +502,7 @@ ZQuery SelectWithoutOrder():
   ZExpression setclause = null;
 }
 {
-  "SELECT" [ "ALL" | "DISTINCT" { q.distinct_ = true; } ]
+  "SELECT" [ "ALL" | "DISTINCT" { q.setDistinct(true); } ]
   select = SelectList()
   from = FromClause()
   [ where = WhereClause() ]

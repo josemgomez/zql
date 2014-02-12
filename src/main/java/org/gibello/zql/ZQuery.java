@@ -25,14 +25,14 @@ import java.util.List;
 public class ZQuery implements ZStatement, ZExp {
 	private static final long serialVersionUID = 7561837297177401348L;
 
-	List<ZSelectItem> select_;
-	boolean distinct_ = false;
-	List<ZFromItem> from_;
-	ZExp where_ = null;
-	ZGroupBy groupby_ = null;
-	ZExpression setclause_ = null;
-	List<ZOrderBy> orderby_ = null;
-	boolean forupdate_ = false;
+	private List<ZSelectItem> select;
+	private boolean distinct = false;
+	private List<ZFromItem> from;
+	private ZExp where = null;
+	private ZGroupBy groupby = null;
+	private ZExpression setclause = null;
+	private List<ZOrderBy> orderby = null;
+	private boolean forupdate = false;
 
 	/**
 	 * Create a new SELECT statement
@@ -47,7 +47,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            A vector of ZSelectItem objects
 	 */
 	public void addSelect(List<ZSelectItem> s) {
-		select_ = s;
+		this.select = s;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            a Vector of ZFromItem objects
 	 */
 	public void addFrom(List<ZFromItem> f) {
-		from_ = f;
+		from = f;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            An SQL Expression
 	 */
 	public void addWhere(ZExp w) {
-		where_ = w;
+		where = w;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            A GROUP BY...HAVING clause
 	 */
 	public void addGroupBy(ZGroupBy g) {
-		groupby_ = g;
+		groupby = g;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            An SQL Expression (generally UNION, INTERSECT or MINUS)
 	 */
 	public void addSet(ZExpression s) {
-		setclause_ = s;
+		setclause = s;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            A vector of ZOrderBy objects
 	 */
 	public void addOrderBy(List<ZOrderBy> v) {
-		orderby_ = v;
+		orderby = v;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 * @return A vector of ZSelectItem objects
 	 */
 	public List<ZSelectItem> getSelect() {
-		return select_;
+		return select;
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 * @return A vector of ZFromItem objects
 	 */
 	public List<ZFromItem> getFrom() {
-		return from_;
+		return from;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 * @return An SQL Expression or sub-query (ZExpression or ZQuery object)
 	 */
 	public ZExp getWhere() {
-		return where_;
+		return where;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 * @return A GROUP BY...HAVING clause
 	 */
 	public ZGroupBy getGroupBy() {
-		return groupby_;
+		return groupby;
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ZQuery implements ZStatement, ZExp {
 	 * @return An SQL Expression (generally UNION, INTERSECT or MINUS)
 	 */
 	public ZExpression getSet() {
-		return setclause_;
+		return setclause;
 	}
 
 	/**
@@ -152,64 +152,68 @@ public class ZQuery implements ZStatement, ZExp {
 	 *            A vector of ZOrderBy objects
 	 */
 	public List<ZOrderBy> getOrderBy() {
-		return orderby_;
+		return orderby;
 	}
 
 	/**
 	 * @return true if it is a SELECT DISTINCT query, false otherwise.
 	 */
 	public boolean isDistinct() {
-		return distinct_;
+		return distinct;
+	}
+
+	public void setDistinct(final boolean distinct) {
+		this.distinct = distinct;
 	}
 
 	/**
 	 * @return true if it is a FOR UPDATE query, false otherwise.
 	 */
 	public boolean isForUpdate() {
-		return forupdate_;
+		return forupdate;
+	}
+	
+	public void setForUpdate(final boolean forupdate) {
+		this.forupdate = forupdate;
 	}
 
 	public String toString() {
-		StringBuffer buf = new StringBuffer("select ");
-		if (distinct_) {
-			buf.append("distinct ");
+		String ret = "select ";
+		if (distinct) {
+			ret += "distinct ";
 		}
 
-		// buf.append(select_.toString());
 		int i;
-		buf.append(select_.get(0).toString());
-		for (i = 1; i < select_.size(); i++) {
-			buf.append(", " + select_.get(i).toString());
+		ret += select.get(0).toString();
+		for (i = 1; i < select.size(); i++) {
+			ret += ", " + select.get(i).toString();
 		}
 
-		// buf.append(" from " + from_.toString());
-		buf.append(" from ");
-		buf.append(from_.get(0).toString());
-		for (i = 1; i < from_.size(); i++) {
-			buf.append(", " + from_.get(i).toString());
+		ret += " from " + from.get(0).toString();
+		for (i = 1; i < from.size(); i++) {
+			ret += ", " + from.get(i).toString();
 		}
 
-		if (where_ != null) {
-			buf.append(" where " + where_.toString());
+		if (where != null) {
+			ret += " where " + where.toString();
 		}
-		if (groupby_ != null) {
-			buf.append(" " + groupby_.toString());
+		if (groupby != null) {
+			ret += " " + groupby.toString();
 		}
-		if (setclause_ != null) {
-			buf.append(" " + setclause_.toString());
+		if (setclause != null) {
+			ret += " " + setclause.toString();
 		}
-		if (orderby_ != null) {
-			buf.append(" order by ");
-			// buf.append(orderby_.toString());
-			buf.append(orderby_.get(0).toString());
-			for (i = 1; i < orderby_.size(); i++) {
-				buf.append(", " + orderby_.get(i).toString());
+		if (orderby != null) {
+			ret += " order by ";
+			ret += orderby.get(0).toString();
+			for (i = 1; i < orderby.size(); i++) {
+				ret += ", " + orderby.get(i).toString();
 			}
 		}
-		if (forupdate_) {
-			buf.append(" for update");
+		if (forupdate) {
+			ret += " for update";
 		}
 
-		return buf.toString();
+		return ret;
 	}
 }

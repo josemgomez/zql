@@ -25,30 +25,34 @@ import java.util.List;
 public class ZLockTable implements ZStatement {
 	private static final long serialVersionUID = 8699068775733575142L;
 
-	boolean nowait_ = false;
-	String lockMode_ = null;
-	List<String> tables_ = null;
+	private boolean nowait = false;
+	private String lockMode = null;
+	private List<String> tables = null;
 
 	public ZLockTable() {
 	}
 
 	public void addTables(List<String> v) {
-		tables_ = v;
+		tables = v;
 	}
 
 	public List<String> getTables() {
-		return tables_;
+		return tables;
 	}
 
 	public void setLockMode(String lc) {
-		lockMode_ = lc;
+		lockMode = lc;
 	}
 
 	public String getLockMode() {
-		return lockMode_;
+		return lockMode;
 	}
 
 	public boolean isNowait() {
-		return nowait_;
+		return nowait;
+	}
+
+	public void setNowait(final boolean nowait) {
+		this.nowait = nowait;
 	}
 }

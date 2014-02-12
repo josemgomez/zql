@@ -23,23 +23,31 @@ package org.gibello.zql;
 public class ZTransactStmt implements ZStatement {
 	private static final long serialVersionUID = -7995172275892597157L;
 
-	final String statement_;
-	String comment_ = null;
-	boolean readOnly_ = false;
+	private final String statement;
+	private String comment = null;
+	private boolean readOnly = false;
 
 	public ZTransactStmt(String st) {
-		statement_ = new String(st);
+		statement = st;
+	}
+
+	public String getStatement() {
+		return statement;
 	}
 
 	public void setComment(String c) {
-		comment_ = new String(c);
+		comment = new String(c);
 	}
 
 	public String getComment() {
-		return comment_;
+		return comment;
 	}
 
 	public boolean isReadOnly() {
-		return readOnly_;
+		return readOnly;
+	}
+	
+	public void setReadOnly(final boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 }

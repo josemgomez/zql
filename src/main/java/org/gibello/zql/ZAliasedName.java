@@ -30,17 +30,17 @@ import java.util.StringTokenizer;
 public class ZAliasedName implements java.io.Serializable {
 	private static final long serialVersionUID = -7797251652151607601L;
 
-	String strform_ = "";
-	String schema_ = null;
-	String table_ = null;
-	String column_ = null;
-	String alias_ = null;
+	private String strform = "";
+	private String schema = null;
+	private String table = null;
+	private String column = null;
+	private String alias = null;
 
 	public static enum Form {
 		TABLE, COLUMN
 	};
 
-	Form form_ = Form.COLUMN;
+	Form form = Form.COLUMN;
 
 	public ZAliasedName() {
 	}
@@ -54,38 +54,37 @@ public class ZAliasedName implements java.io.Serializable {
 	 *            The name form (FORM_TABLE or FORM_COLUMN)
 	 */
 	public ZAliasedName(String fullname, Form form) {
-
-		form_ = form;
-		strform_ = fullname;
+		this.form = form;
+		this.strform = fullname;
 
 		StringTokenizer st = new StringTokenizer(fullname, ".");
 		switch (st.countTokens()) {
 		case 1:
 			if (form == Form.TABLE) {
-				table_ = st.nextToken();
+				table = st.nextToken();
 			} else {
-				column_ = st.nextToken();
+				column = st.nextToken();
 			}
 			break;
 		case 2:
 			if (form == Form.TABLE) {
-				schema_ = st.nextToken();
-				table_ = st.nextToken();
+				schema = st.nextToken();
+				table = st.nextToken();
 			} else {
-				table_ = st.nextToken();
-				column_ = st.nextToken();
+				table = st.nextToken();
+				column = st.nextToken();
 			}
 			break;
 		case 3:
 		default:
-			schema_ = st.nextToken();
-			table_ = st.nextToken();
-			column_ = st.nextToken();
+			schema = st.nextToken();
+			table = st.nextToken();
+			column = st.nextToken();
 			break;
 		}
-		schema_ = postProcess(schema_);
-		table_ = postProcess(table_);
-		column_ = postProcess(column_);
+		schema = postProcess(schema);
+		table = postProcess(table);
+		column = postProcess(column);
 	}
 
 	private String postProcess(String val) {
@@ -104,10 +103,10 @@ public class ZAliasedName implements java.io.Serializable {
 	}
 
 	public String toString() {
-		if (alias_ == null) {
-			return strform_;
+		if (alias == null) {
+			return strform;
 		} else {
-			return strform_ + " " + alias_;
+			return strform + " " + alias;
 		}
 	}
 
@@ -115,31 +114,35 @@ public class ZAliasedName implements java.io.Serializable {
 	 * @return If the name is of the form schema.table.column, returns the schema part
 	 */
 	public String getSchema() {
-		return schema_;
+		return schema;
 	}
 
 	/**
 	 * @return If the name is of the form [schema.]table.column, returns the schema part
 	 */
 	public String getTable() {
-		return table_;
+		return table;
 	}
 
 	/**
 	 * @return The name is of the form [[schema.]table.]column: return the column part
 	 */
 	public String getColumn() {
-		return column_;
+		return column;
+	}
+
+	protected void setStrform (final String strform) {
+		this.strform = strform;
 	}
 
 	/**
 	 * @return true if column is "*", false otherwise. Example: *, table.* are wildcards.
 	 */
 	public boolean isWildcard() {
-		if (form_ == Form.TABLE) {
-			return table_ != null && table_.equals("*");
+		if (form == Form.TABLE) {
+			return table != null && "*".equals(table);
 		} else {
-			return column_ != null && column_.indexOf('*') >= 0;
+			return column != null && column.indexOf('*') >= 0;
 		}
 	}
 
@@ -147,7 +150,7 @@ public class ZAliasedName implements java.io.Serializable {
 	 * @return the alias associated to the current name.
 	 */
 	public String getAlias() {
-		return alias_;
+		return alias;
 	}
 
 	/**
@@ -157,6 +160,6 @@ public class ZAliasedName implements java.io.Serializable {
 	 *            the alias associated to the current name.
 	 */
 	public void setAlias(String a) {
-		alias_ = a;
+		this.alias = a;
 	}
 }
