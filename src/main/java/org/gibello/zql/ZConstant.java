@@ -17,47 +17,50 @@
 
 package org.gibello.zql;
 
-import java.io.* ;
-import java.util.* ;
-
 /**
  * ZConstant: a representation of SQL constants
  */
 public class ZConstant implements ZExp {
 
-  /**
-   * ZConstant types
-   */
-  public static final int UNKNOWN = -1;
-  public static final int COLUMNNAME = 0;
-  public static final int NULL = 1;
-  public static final int NUMBER = 2;
-  public static final int STRING = 3;
+	private static final long serialVersionUID = 5152573166867973827L;
 
-  int type_ = ZConstant.UNKNOWN;
-  String val_ = null;
+	/**
+	 * ZConstant types
+	 */
+	public static enum Type {
+		UNKNOWN, COLUMNNAME, NULL, NUMBER, STRING
+	};
 
-  /**
-   * Create a new constant, given its name and type.
-   */
-  public ZConstant(String v, int typ) {
-    val_ = new String(v);
-    type_ = typ;
-  }
+	final Type type_;
+	final String val_;
 
-  /*
-   * @return the constant value
-   */
-  public String getValue() { return val_; }
+	/**
+	 * Create a new constant, given its name and type.
+	 */
+	public ZConstant(String v, Type typ) {
+		val_ = v;
+		type_ = typ;
+	}
 
-  /*
-   * @return the constant type
-   */
-  public int getType() { return type_; }
+	/*
+	 * @return the constant value
+	 */
+	public String getValue() {
+		return val_;
+	}
 
-  public String toString() {
-    if(type_ == STRING) return '\'' + val_ + '\'';
-    else return val_;
-  }
-};
+	/*
+	 * @return the constant type
+	 */
+	public Type getType() {
+		return type_;
+	}
 
+	public String toString() {
+		if (type_ == Type.STRING) {
+			return '\'' + val_ + '\'';
+		} else {
+			return val_;
+		}
+	}
+}

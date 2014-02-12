@@ -17,49 +17,61 @@
 
 package org.gibello.zql;
 
-import java.io.*;
-import java.util.*;
-
 /**
  * ZDelete: an SQL DELETE statement.<br>
  * SQL Syntax: DELETE [from] table [where Expression];
  */
 public class ZDelete implements ZStatement {
 
-  String table_;
-  ZExp where_ = null;
+	private static final long serialVersionUID = -6421794692770880027L;
 
-  /**
-   * Create a DELETE statement on a given table
-   * @param tab the table name
-   */
-  public ZDelete(String tab) {
-    table_ = new String(tab);
-  }
+	final String table_;
+	ZExp where_ = null;
 
-  /**
-   * Add a WHERE clause to the DELETE statement
-   * @param w An SQL expression compatible with a WHERE clause
-   */
-  public void addWhere(ZExp w) { where_ = w; }
+	/**
+	 * Create a DELETE statement on a given table
+	 * 
+	 * @param tab
+	 *            the table name
+	 */
+	public ZDelete(String tab) {
+		table_ = new String(tab);
+	}
 
-  /**
-   * @return The table concerned by the DELETE statement.
-   */
-  public String getTable() { return table_; }
+	/**
+	 * Add a WHERE clause to the DELETE statement
+	 * 
+	 * @param w
+	 *            An SQL expression compatible with a WHERE clause
+	 */
+	public void addWhere(ZExp w) {
+		where_ = w;
+	}
 
-  /**
-   * @return The SQL Where clause of the DELETE statement (an SQL Expression
-   * or Subquery, compatible with an SQL WHERE clause).
-   */
-  public ZExp getWhere() { return where_; }
+	/**
+	 * @return The table concerned by the DELETE statement.
+	 */
+	public String getTable() {
+		return table_;
+	}
 
-  public String toString() {
-    StringBuffer buf = new StringBuffer("delete ");
-    if(where_ != null) buf.append("from ");
-    buf.append(table_);
-    if(where_ != null) buf.append(" where " + where_.toString());
-    return buf.toString();
-  }
-};
+	/**
+	 * @return The SQL Where clause of the DELETE statement (an SQL Expression or Subquery, compatible with an SQL WHERE
+	 *         clause).
+	 */
+	public ZExp getWhere() {
+		return where_;
+	}
 
+	public String toString() {
+		StringBuffer buf = new StringBuffer("delete ");
+		if (where_ != null) {
+			buf.append("from ");
+		}
+		buf.append(table_);
+		if (where_ != null) {
+			buf.append(" where " + where_.toString());
+		}
+		return buf.toString();
+	}
+}

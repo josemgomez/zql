@@ -17,8 +17,7 @@
 
 package org.gibello.zql;
 
-import java.io.* ;
-import java.util.* ;
+import java.util.StringTokenizer;
 
 /**
  * A name/alias association<br>
@@ -29,105 +28,135 @@ import java.util.* ;
  * </ul>
  */
 public class ZAliasedName implements java.io.Serializable {
+	private static final long serialVersionUID = -7797251652151607601L;
 
-  String strform_ = "";
-  String schema_ = null;
-  String table_ = null;
-  String column_ = null;
-  String alias_ = null;
+	String strform_ = "";
+	String schema_ = null;
+	String table_ = null;
+	String column_ = null;
+	String alias_ = null;
 
-  public static int FORM_TABLE = 1;
-  public static int FORM_COLUMN = 2;
+	public static enum Form {
+		TABLE, COLUMN
+	};
 
-  int form_ = FORM_COLUMN;
+	Form form_ = Form.COLUMN;
 
-  public ZAliasedName() {}
+	public ZAliasedName() {
+	}
 
-  /**
-   * Create a new ZAliasedName given it's full name.
-   * @param fullname The full name: [[schema.]table.]column
-   * @param form The name form (FORM_TABLE or FORM_COLUMN)
-   */
-  public ZAliasedName(String fullname, int form) {
+	/**
+	 * Create a new ZAliasedName given it's full name.
+	 * 
+	 * @param fullname
+	 *            The full name: [[schema.]table.]column
+	 * @param form
+	 *            The name form (FORM_TABLE or FORM_COLUMN)
+	 */
+	public ZAliasedName(String fullname, Form form) {
 
-    form_ = form;
-    strform_ = new String(fullname);
+		form_ = form;
+		strform_ = fullname;
 
-    StringTokenizer st = new StringTokenizer(fullname, ".");
-    switch(st.countTokens()) {
-      case 1:
-        if(form == FORM_TABLE) table_ = new String(st.nextToken());
-        else column_ = new String(st.nextToken());
-        break;
-      case 2:
-        if(form == FORM_TABLE) {
-          schema_ = new String(st.nextToken());
-          table_ = new String(st.nextToken());
-        } else {
-          table_ = new String(st.nextToken());
-          column_ = new String(st.nextToken());
-        }
-        break;
-      case 3:
-      default:
-        schema_ = new String(st.nextToken());
-        table_ = new String(st.nextToken());
-        column_ = new String(st.nextToken());
-        break;
-    }
-    schema_ = postProcess(schema_);
-    table_ = postProcess(table_);
-    column_ = postProcess(column_);
-  }
+		StringTokenizer st = new StringTokenizer(fullname, ".");
+		switch (st.countTokens()) {
+		case 1:
+			if (form == Form.TABLE) {
+				table_ = st.nextToken();
+			} else {
+				column_ = st.nextToken();
+			}
+			break;
+		case 2:
+			if (form == Form.TABLE) {
+				schema_ = st.nextToken();
+				table_ = st.nextToken();
+			} else {
+				table_ = st.nextToken();
+				column_ = st.nextToken();
+			}
+			break;
+		case 3:
+		default:
+			schema_ = st.nextToken();
+			table_ = st.nextToken();
+			column_ = st.nextToken();
+			break;
+		}
+		schema_ = postProcess(schema_);
+		table_ = postProcess(table_);
+		column_ = postProcess(column_);
+	}
 
-  private String postProcess(String val) {
-    if(val == null) return null;
-    if(val.indexOf("(") >= 0) val = val.substring(val.lastIndexOf("(") + 1);
-    if(val.indexOf(")") >= 0) val = val.substring(0, val.indexOf(")"));
-    return val.trim();
-  }
+	private String postProcess(String val) {
+		if (val == null) {
+			return null;
+		}
 
-  public String toString() {
-    if(alias_ == null) return strform_;
-    else return strform_ + " " + alias_;
-  }
+		if (val.indexOf("(") >= 0) {
+			val = val.substring(val.lastIndexOf("(") + 1);
+		}
 
-  /**
-   * @return If the name is of the form schema.table.column,
-   * returns the schema part
-   */
-  public String getSchema() { return schema_; }
+		if (val.indexOf(")") >= 0) {
+			val = val.substring(0, val.indexOf(")"));
+		}
+		return val.trim();
+	}
 
-  /**
-   * @return If the name is of the form [schema.]table.column,
-   * returns the schema part
-   */
-  public String getTable() { return table_; }
+	public String toString() {
+		if (alias_ == null) {
+			return strform_;
+		} else {
+			return strform_ + " " + alias_;
+		}
+	}
 
-  /**
-   * @return The name is of the form [[schema.]table.]column:
-   * return the column part
-   */
-  public String getColumn() { return column_; }
+	/**
+	 * @return If the name is of the form schema.table.column, returns the schema part
+	 */
+	public String getSchema() {
+		return schema_;
+	}
 
-  /**
-   * @return true if column is "*", false otherwise.
-   * Example: *, table.* are wildcards.
-   */
-  public boolean isWildcard() {
-    if(form_ == FORM_TABLE) return table_ != null && table_.equals("*");
-    else return column_ != null && column_.indexOf('*') >= 0;
-  }
+	/**
+	 * @return If the name is of the form [schema.]table.column, returns the schema part
+	 */
+	public String getTable() {
+		return table_;
+	}
 
-  /**
-   * @return the alias associated to the current name.
-   */
-  public String getAlias() { return alias_; }
+	/**
+	 * @return The name is of the form [[schema.]table.]column: return the column part
+	 */
+	public String getColumn() {
+		return column_;
+	}
 
-  /**
-   * Associate an alias with the current name.
-   * @param a the alias associated to the current name.
-   */
-  public void setAlias(String a) { alias_ = new String(a); }
+	/**
+	 * @return true if column is "*", false otherwise. Example: *, table.* are wildcards.
+	 */
+	public boolean isWildcard() {
+		if (form_ == Form.TABLE) {
+			return table_ != null && table_.equals("*");
+		} else {
+			return column_ != null && column_.indexOf('*') >= 0;
+		}
+	}
+
+	/**
+	 * @return the alias associated to the current name.
+	 */
+	public String getAlias() {
+		return alias_;
+	}
+
+	/**
+	 * Associate an alias with the current name.
+	 * 
+	 * @param a
+	 *            the alias associated to the current name.
+	 */
+	public void setAlias(String a) {
+		alias_ = a;
+	}
 }
-

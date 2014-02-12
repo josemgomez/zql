@@ -17,13 +17,8 @@
 
 package org.gibello.zql;
 
-import java.io.* ;
-import java.util.* ;
-
 /**
- * A common interface for all SQL Expressions (ZQueries, ZExpressions and
- * ZConstants are ZExps).
+ * A common interface for all SQL Expressions (ZQueries, ZExpressions and ZConstants are ZExps).
  */
 public interface ZExp extends java.io.Serializable {
-};
-
+}

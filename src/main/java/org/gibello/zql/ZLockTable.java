@@ -17,24 +17,38 @@
 
 package org.gibello.zql;
 
-import java.io.*;
-import java.util.*;
+import java.util.List;
 
 /**
  * ZLockTable: an SQL LOCK TABLE statement
  */
 public class ZLockTable implements ZStatement {
+	private static final long serialVersionUID = 8699068775733575142L;
 
-  boolean nowait_ = false;
-  String lockMode_ = null;
-  Vector tables_ = null;
+	boolean nowait_ = false;
+	String lockMode_ = null;
+	List<String> tables_ = null;
 
-  public ZLockTable() {}
+	public ZLockTable() {
+	}
 
-  public void addTables(Vector v) { tables_ = v; }
-  public Vector getTables() { return tables_; } 
-  public void setLockMode(String lc) { lockMode_ = new String(lc); }
-  public String getLockMode() { return lockMode_; }
-  public boolean isNowait() { return nowait_; }
-};
+	public void addTables(List<String> v) {
+		tables_ = v;
+	}
 
+	public List<String> getTables() {
+		return tables_;
+	}
+
+	public void setLockMode(String lc) {
+		lockMode_ = lc;
+	}
+
+	public String getLockMode() {
+		return lockMode_;
+	}
+
+	public boolean isNowait() {
+		return nowait_;
+	}
+}

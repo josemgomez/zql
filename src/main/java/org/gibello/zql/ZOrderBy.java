@@ -21,32 +21,44 @@ package org.gibello.zql;
  * An SQL query ORDER BY clause.
  */
 public class ZOrderBy implements java.io.Serializable {
-  ZExp exp_;
-  boolean asc_ = true;
+	private static final long serialVersionUID = 8314427185544549626L;
 
-  public ZOrderBy(ZExp e) { exp_ = e; }
+	final ZExp exp_;
+	boolean asc_ = true;
 
-  /**
-   * Set the order to ascending or descending (defailt is ascending order).
-   * @param a true for ascending order, false for descending order.
-   */
-  public void setAscOrder(boolean a) { asc_ = a; }
+	public ZOrderBy(ZExp e) {
+		exp_ = e;
+	}
 
-  /**
-   * Get the order (ascending or descending)
-   * @return true if ascending order, false if descending order.
-   */
-  public boolean getAscOrder() { return asc_; }
+	/**
+	 * Set the order to ascending or descending (defailt is ascending order).
+	 * 
+	 * @param a
+	 *            true for ascending order, false for descending order.
+	 */
+	public void setAscOrder(boolean a) {
+		asc_ = a;
+	}
 
-  /**
-   * Get the ORDER BY expression.
-   * @return An expression (generally, a ZConstant that represents a column
-   * name).
-   */
-  public ZExp getExpression() { return exp_; }
+	/**
+	 * Get the order (ascending or descending)
+	 * 
+	 * @return true if ascending order, false if descending order.
+	 */
+	public boolean getAscOrder() {
+		return asc_;
+	}
 
-  public String toString() {
-    return exp_.toString() + " " + (asc_ ? "ASC" : "DESC");
-  }
-};
+	/**
+	 * Get the ORDER BY expression.
+	 * 
+	 * @return An expression (generally, a ZConstant that represents a column name).
+	 */
+	public ZExp getExpression() {
+		return exp_;
+	}
 
+	public String toString() {
+		return exp_.toString() + " " + (asc_ ? "ASC" : "DESC");
+	}
+}

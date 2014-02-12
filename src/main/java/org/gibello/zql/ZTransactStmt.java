@@ -17,23 +17,29 @@
 
 package org.gibello.zql;
 
-import java.io.*;
-import java.util.*;
-
 /**
- * ZTransactStmt: an SQL statement that concerns database transactions
- * (example: COMMIT, ROLLBACK, SET TRANSACTION)
+ * ZTransactStmt: an SQL statement that concerns database transactions (example: COMMIT, ROLLBACK, SET TRANSACTION)
  */
 public class ZTransactStmt implements ZStatement {
+	private static final long serialVersionUID = -7995172275892597157L;
 
-  String statement_;
-  String comment_ = null;
-  boolean readOnly_ = false;
+	final String statement_;
+	String comment_ = null;
+	boolean readOnly_ = false;
 
-  public ZTransactStmt(String st) { statement_ = new String(st); }
+	public ZTransactStmt(String st) {
+		statement_ = new String(st);
+	}
 
-  public void setComment(String c) { comment_ = new String(c); }
-  public String getComment() { return comment_; }
-  public boolean isReadOnly() { return readOnly_; }
-};
+	public void setComment(String c) {
+		comment_ = new String(c);
+	}
 
+	public String getComment() {
+		return comment_;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly_;
+	}
+}
