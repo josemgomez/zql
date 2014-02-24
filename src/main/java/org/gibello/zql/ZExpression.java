@@ -28,7 +28,7 @@ public class ZExpression implements ZExp {
 	private static final long serialVersionUID = 3034365237806330384L;
 
 	private final String op;
-	private final List<ZExp> operands = new ArrayList<ZExp>();
+	private List<ZExp> operands = new ArrayList<ZExp>();
 
 	/**
 	 * Create an SQL Expression given the operator
@@ -84,9 +84,8 @@ public class ZExpression implements ZExp {
 	 * @param v
 	 *            A vector that contains all operands (ZExp objects).
 	 */
-	public void setOperands(List<ZExp> v) {
-		operands.clear();
-		operands.addAll(v);
+	public void setOperands(final List<ZExp> v) {
+		operands = v;
 	}
 
 	/**
